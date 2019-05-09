@@ -41,13 +41,9 @@ class App extends PureComponent {
   }
 
   componentDidMount() {
-    this.setState({status: 'creating data'});
-    this._createData();
-
-    this.setState({status: 'creating network'});
-    this._createNetwork();
-
     this.setState({status: 'training model'});
+    this._createData();
+    this._createNetwork();
     this._train();
   }
 
