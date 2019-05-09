@@ -1,8 +1,23 @@
 import React, {PureComponent} from 'react';
 import * as tf from '@tensorflow/tfjs';
 import tinycolor from 'tinycolor2';
+import styled from 'styled-components';
 
 import LineChart from './LineChart';
+
+const Container = styled.div`
+  max-width: 1127px;
+  margin: auto;
+  padding: 2rem;
+`;
+
+const GraphContainer = styled.div`
+  display: flex;
+`;
+
+const Input = styled.input`
+  margin-right: 1rem;
+`;
 
 class App extends PureComponent {
   featuresTensor = null;
@@ -67,61 +82,66 @@ class App extends PureComponent {
       : prediction;
 
     return (
-      <div>
-        <strong>STATUS: {status}</strong>
+      <Container>
+        <div style={{padding: '20px 0'}}>
+          <h1>STATUS: {status}</h1>
 
-        {!!accData.length && (
-          <div>
-            <strong>Accuracy: </strong>
-            <LineChart data={accData} dataKey="acc" />
-          </div>
-        )}
-        {!!lossData.length && (
-          <div>
-            <strong>Loss: </strong>
-            <LineChart data={lossData} dataKey="loss" />
-          </div>
-        )}
+          <GraphContainer>
+            {!!accData.length && (
+              <div>
+                <strong>Accuracy: </strong>
+                <LineChart data={accData} dataKey="acc" />
+              </div>
+            )}
+            {!!lossData.length && (
+              <div>
+                <strong>Loss: </strong>
+                <LineChart data={lossData} dataKey="loss" />
+              </div>
+            )}
+          </GraphContainer>
 
-        {isTrained && (
-          <div>
-            <input
-              onChange={this.handleChange}
-              name="valueR"
-              value={valueR}
-              type="number"
-            />
-            <input
-              onChange={this.handleChange}
-              name="valueG"
-              value={valueG}
-              type="number"
-            />
-            <input
-              onChange={this.handleChange}
-              name="valueB"
-              value={valueB}
-              type="number"
-            />
-            <button onClick={this.resetTestColor}>
-              <i className="fas fa-redo" />
-            </button>
-            <button onClick={this.handlePredict}>Predict</button>
-            <table>
-              <tr>
-                <th>Feature</th>
-                <th>Target</th>
-                <th>Prediction</th>
-              </tr>
-              <tr>
-                <td>{this.renderColorCell(fColor)}</td>
-                <td>{this.renderColorCell(tColor)}</td>
-                <td>{!!pColor && this.renderColorCell(pColor)}</td>
-              </tr>
-            </table>
-          </div>
-        )}
-      </div>
+          <h1>Test</h1>
+          {isTrained && (
+            <div>
+              <Input
+                onChange={this.handleChange}
+                name="valueR"
+                value={valueR}
+                type="number"
+              />
+              <Input
+                onChange={this.handleChange}
+                name="valueG"
+                value={valueG}
+                type="number"
+              />
+              <Input
+                onChange={this.handleChange}
+                name="valueB"
+                value={valueB}
+                type="number"
+              />
+              <button onClick={this.resetTestColor}>
+                <i className="fas fa-redo" />
+              </button>
+              <button onClick={this.handlePredict}>Predict</button>
+              <table>
+                <tr>
+                  <th>Feature</th>
+                  <th>Target</th>
+                  <th>Prediction</th>
+                </tr>
+                <tr>
+                  <td>{this.renderColorCell(fColor)}</td>
+                  <td>{this.renderColorCell(tColor)}</td>
+                  <td>{!!pColor && this.renderColorCell(pColor)}</td>
+                </tr>
+              </table>
+            </div>
+          )}
+        </div>
+      </Container>
     );
   }
 
