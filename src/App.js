@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import tinycolor from 'tinycolor2';
 import styled from 'styled-components';
@@ -36,20 +36,20 @@ class App extends PureComponent {
       valueR: this._getRandomColorValue(),
       valueG: this._getRandomColorValue(),
       valueB: this._getRandomColorValue(),
-      prediction: null,
+      prediction: null
     };
   }
 
   componentDidMount() {
-    this.setState({status: 'training model'});
+    this.setState({ status: 'training model' });
     this._createData();
     this._createNetwork();
     this._train();
   }
 
   handleChange = e => {
-    const {name, value} = e.target;
-    this.setState({[name]: value});
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -60,7 +60,7 @@ class App extends PureComponent {
       valueR,
       valueG,
       valueB,
-      prediction,
+      prediction
     } = this.state;
 
     // const isTrained = status === 'done';
@@ -79,7 +79,7 @@ class App extends PureComponent {
 
     return (
       <Container>
-        <div style={{padding: '20px 0'}}>
+        <div style={{ padding: '20px 0' }}>
           <h1>STATUS: {status}</h1>
 
           <GraphContainer>
@@ -146,7 +146,7 @@ class App extends PureComponent {
     return (
       <div>
         <div
-          style={{background: colorHexString, width: '100px', height: '50px'}}
+          style={{ background: colorHexString, width: '100px', height: '50px' }}
         />
         <small>{colorHexString}</small>
       </div>
@@ -157,31 +157,31 @@ class App extends PureComponent {
     this.setState({
       valueR: this._getRandomColorValue(),
       valueG: this._getRandomColorValue(),
-      valueB: this._getRandomColorValue(),
+      valueB: this._getRandomColorValue()
     });
   };
 
   handlePredict = async () => {
-    const {valueR, valueG, valueB} = this.state;
+    const { valueR, valueG, valueB } = this.state;
     const input = this._normalize([valueR, valueG, valueB]);
     const [r, g, b] = await this.model
       .predict(tf.tensor2d([input], [1, 3]))
       .data();
-    this.setState({prediction: this._denormalize([r, g, b])});
+    this.setState({ prediction: this._denormalize([r, g, b]) });
   };
 
   _train = () => {
-    const {epochs, batchSize} = this;
+    const { epochs, batchSize } = this;
     this.model
-      .fit(this.featuresTensor, this.targetsTensor, {epochs, batchSize})
+      .fit(this.featuresTensor, this.targetsTensor, { epochs, batchSize })
       .then(result => {
         const {
-          history: {acc, loss},
+          history: { acc, loss }
         } = result;
         this.setState({
           status: 'done',
-          accData: acc.map(d => ({acc: d})),
-          lossData: loss.map(d => ({loss: d})),
+          accData: acc.map(d => ({ acc: d })),
+          lossData: loss.map(d => ({ loss: d }))
         });
       });
   };
@@ -212,12 +212,12 @@ class App extends PureComponent {
     this.model = tf.sequential();
     // units: the amount of "neurons", or "nodes" the layer has inside it
 
-    this.model.add(tf.layers.dense({inputShape: [3], units: 3}));
-    this.model.add(tf.layers.dense({units: 64, useBias: true}));
-    this.model.add(tf.layers.dense({units: 32, useBias: true}));
-    this.model.add(tf.layers.dense({units: 16, useBias: true}));
+    this.model.add(tf.layers.dense({ inputShape: [3], units: 3 }));
+    this.model.add(tf.layers.dense({ units: 64, useBias: true }));
+    this.model.add(tf.layers.dense({ units: 32, useBias: true }));
+    this.model.add(tf.layers.dense({ units: 16, useBias: true }));
     this.model.add(
-      tf.layers.dense({units: 3, useBias: true, activation: 'relu'}),
+      tf.layers.dense({ units: 3, useBias: true, activation: 'relu' })
     );
 
     const optimizer = tf.train.sgd(0.4);
@@ -225,7 +225,7 @@ class App extends PureComponent {
     this.model.compile({
       optimizer,
       loss: 'meanSquaredError',
-      metrics: ['accuracy'],
+      metrics: ['accuracy']
     });
   };
 
@@ -241,12 +241,12 @@ class App extends PureComponent {
     return [
       this._getRandomColorValue(),
       this._getRandomColorValue(),
-      this._getRandomColorValue(),
+      this._getRandomColorValue()
     ];
   };
 
   _getComplementaryColorArray = ([cr, cg, cb]) => {
-    const {r, g, b} = tinycolor(`rgb(${cr}, ${cg}, ${cb})`)
+    const { r, g, b } = tinycolor(`rgb(${cr}, ${cg}, ${cb})`)
       .complement()
       .toRgb();
     return [r, g, b];
